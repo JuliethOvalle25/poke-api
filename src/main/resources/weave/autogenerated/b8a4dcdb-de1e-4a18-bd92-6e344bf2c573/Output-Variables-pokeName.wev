@@ -1,0 +1,4 @@
+%dw 2.0
+
+type auto_b8a4dcdb_de1e_4a18_bd92_6e344bf2c573_Output_Variables_pokeName = Any
+

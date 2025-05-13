@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+	<sub-flow name="impl-get-pokemon-by-name" doc:id="e8ba76b2-88c9-42fb-945c-f69770c41f77" >
+		<ee:transform doc:name="Set var pokename" doc:id="5899bfc6-4ea4-4c48-b4d9-a21234edf321" >
+			<ee:variables >
+				<ee:set-variable variableName="pokeName" ><![CDATA[attributes.uriParams.'pokeName']]></ee:set-variable>
+			</ee:variables>
+		</ee:transform>
+		<flow-ref doc:name="cl-get-pokemon-by-name" doc:id="b83cf1fe-909a-4759-aed4-494478005070" name="cl-get-pokemon-by-name"/>
+		<ee:transform doc:name="Set response" doc:id="fcae0f27-e58f-4c52-9a82-5dc933f817a7" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+{   
+    "id": payload.id default "0",
+    "name": payload.forms[0].name default "Undefined",
+    "class": payload.types[0]."type".name default "Undefined",
+    "weight" : payload.weight default "0",
+    "size": payload.size default "Undefined",
+    "speed": payload.stats[5].base_stat default "0",
+    "defense": payload.stats[2].base_stat default "0",
+    "attack": payload.stats[1].base_stat default "0",
+    "abilities" : payload.abilities[1].ability.name default "Undefined",
+    "base experience" : payload.base_experience default "0"
+    
+}
+]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+	</sub-flow>
+</mule>

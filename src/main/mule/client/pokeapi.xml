@@ -1,5 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<mule xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd"></mule>
+<mule xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd">
+	<sub-flow name="cl-get-pokemon-by-name" doc:id="b8a4dcdb-de1e-4a18-bd92-6e344bf2c573" >
+		<http:request method="GET" doc:name="Request Pokemon by name" doc:id="5377b74f-f511-45d2-9525-589e9013f98a" config-ref="HTTP_Request_getPokemonn" path="/v2/pokemon/{pokeName}" >
+			<http:uri-params ><![CDATA[#[output application/java
+---
+{
+	'pokeName' : vars.pokeName
+}]]]></http:uri-params>
+		</http:request>
+	</sub-flow>
+</mule>
