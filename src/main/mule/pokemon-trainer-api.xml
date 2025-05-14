@@ -3,7 +3,7 @@
     <http:listener-config name="pokemon-trainer-api-httpListenerConfig">
         <http:listener-connection host="0.0.0.0" port="8081" />
     </http:listener-config>
-    <apikit:config name="pokemon-trainer-api-config" api="resource::beae5a6d-99ea-49f5-b075-78dfeb4996b0:pokemon-trainer-api:1.0.2:raml:zip:pokemon-trainer-api.raml" outboundHeadersMapName="outboundHeaders" httpStatusVarName="httpStatus" />
+    <apikit:config name="pokemon-trainer-api-config" api="resource::beae5a6d-99ea-49f5-b075-78dfeb4996b0:pokemon-trainer-api:1.0.3:raml:zip:pokemon-trainer-api.raml" outboundHeadersMapName="outboundHeaders" httpStatusVarName="httpStatus" />
     <flow name="pokemon-trainer-api-main">
         <http:listener config-ref="pokemon-trainer-api-httpListenerConfig" path="/api/*">
             <http:response statusCode="#[vars.httpStatus default 200]">
@@ -207,18 +207,9 @@ output application/json
         </ee:transform>
     </flow>
     <flow name="post:\v1\trainers:application\json:pokemon-trainer-api-config">
-        <ee:transform doc:name="Transform Message">
-            <ee:message>
-                <ee:set-payload><![CDATA[%dw 2.0
-output application/json
----
-{
-  message: "trainer successfully created"
-} as Object {encoding: "UTF-8", mediaType: "application/json"}]]></ee:set-payload>
-            </ee:message>
-        </ee:transform>
+        <flow-ref doc:name="impl-post-pokemon" doc:id="2793450b-a74a-47da-989b-3e2ee35d2224" name="impl-post-pokemon" />
     </flow>
-	<flow name="get:\v1\pokemons\(pokeName):pokemon-trainer-api-config">
-		<flow-ref doc:name="impl-get-pokemon-by-name" doc:id="33f632c6-b2dc-4efd-ba47-e34e92fb1776" name="impl-get-pokemon-by-name" />
+    <flow name="get:\v1\pokemons\(pokeName):pokemon-trainer-api-config">
+        <flow-ref doc:name="impl-get-pokemon-by-name" doc:id="33f632c6-b2dc-4efd-ba47-e34e92fb1776" name="impl-get-pokemon-by-name" />
     </flow>
 </mule>

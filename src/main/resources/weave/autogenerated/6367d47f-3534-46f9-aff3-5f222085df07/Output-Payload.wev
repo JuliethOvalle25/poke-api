@@ -1,0 +1,11 @@
+%dw 2.0
+
+type auto_6367d47f_3534_46f9_aff3_5f222085df07_Output_Payload = {
+  city: String, 
+  pokefav: Array<String> {"label": "Favorite pokemon trainer"}, 
+  name: String, 
+  id: Number, 
+  email: String, 
+  _?: Any
+}
+

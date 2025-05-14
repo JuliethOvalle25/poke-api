@@ -33,4 +33,31 @@ output application/json
 			</ee:message>
 		</ee:transform>
 	</sub-flow>
+	<sub-flow name="impl-post-pokemon" doc:id="74c91780-aad2-4a45-8b5e-ccdf85a571a5" >
+		<ee:transform doc:name="Transform Message" doc:id="38299b92-311a-4b36-b76e-4b8d8ef63dd2">
+			<ee:message>
+				<ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+{
+	name: payload.name,
+    city: payload.city,
+    email: payload.email,
+   pokefav: payload.pokefav reduce ((item, acc) -> acc ++ "," ++ item)
+}
+]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<flow-ref doc:name="cl-post-pokemon" doc:id="848fd1db-6a49-43fb-9886-50d1b456ed70" name="cl-post-pokemon"/>
+		<ee:transform doc:name="Set response" doc:id="3ed310db-1d8e-4559-b6cf-a8c04acaa40d" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+{
+  message: "trainer successfully created"
+} as Object {encoding: "UTF-8", mediaType: "application/json"}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+	</sub-flow>
 </mule>
