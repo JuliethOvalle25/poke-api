@@ -1,57 +1,68 @@
-# 🧢 Pokémon Trainer - MuleSoft Integration Project
+# 🧢 Pokémon Trainer - Proyecto de integración con MuleSoft
 
-Explora el universo Pokémon a través de la integración de datos con **MuleSoft**.  
-Este proyecto fue creado con el propósito de **poner en práctica los conocimientos adquiridos en MuleSoft**, utilizando una API externa y una base de datos para construir un flujo completo de integración.
-
----
-
-## 🎯 Finalidad del proyecto
-
-Este repositorio fue desarrollado como ejercicio práctico para afianzar conceptos aprendidos en MuleSoft, especialmente:
-
-- Diseño de APIs con RAML
-- Uso de conectores de base de datos (MySQL)
-- Transformaciones con DataWeave
-- Llamadas externas a APIs REST (PokeAPI)
-- Orquestación de servicios con For Each y Choice
+Hola y bienvenid@ a este proyecto 🚀  
+Aquí combino dos cosas que me gustan: aprender sobre integración de datos y el mundo Pokémon.  
+Este repositorio nace como una forma de **poner en práctica lo aprendido en MuleSoft**
 
 ---
 
-## ✨ ¿Qué hace este proyecto?
+## 🎯 ¿Qué estoy buscando con este proyecto?
 
-- 🔗 Integra datos de **entrenadores Pokémon** almacenados en MySQL con la **PokeAPI**.
-- 📦 Devuelve una respuesta unificada en formato JSON con los datos de cada entrenador y su Pokémon favorito.
-- 🧠 Clasifica los Pokémon usando lógica condicional (Choice).
-- 💡 Demuestra habilidades clave para desarrollos de integración realistas con MuleSoft.
+La idea principal es **aplicar lo aprendido** en un curso de MuleSoft, experimentando con:
 
----
+- Diseño de APIs en RAML
+- Transformación de datos con DataWeave
+- Conexión con bases de datos (MySQL)
+- Consumo de APIs externas (como la PokeAPI)
+- Lógica condicional y manejo de estructuras con For Each y Choice
 
-## 🛠️ Herramientas utilizadas
-
-- **MuleSoft Anypoint Studio**
-- **MySQL**
-- **PokeAPI**
-- **DataWeave**
-- **Postman**
-- **RAML**
+Más allá de que todo funcione perfecto, el objetivo es aprender, practicar y equivocarme si es necesario 
 
 ---
 
-## 🚧 Estado del proyecto
+## 🔍 ¿Qué hace este proyecto?
 
-🟡 **En desarrollo**  
-Este proyecto se encuentra en construcción activa. Se irá actualizando con nuevas funcionalidades, mejoras visuales y documentación extendida.
+- Conecta una base de datos con información de entrenadores Pokémon
+- Consulta la **PokeAPI** para traer detalles de los Pokémon favoritos
+- Muestra todo en un JSON que une los datos del entrenador con los de su Pokémon
+- Clasifica a los Pokémon con una lógica simple (porque no todos los Pokémon son iguales)
 
 ---
 
+## 🛠️ Herramientas que estoy usando
+
+- 🧩 **MuleSoft Anypoint Studio**
+- 🐬 **MySQL**
+- 🌐 **PokeAPI**
+- 🔄 **DataWeave**
+- 🧪 **Postman**
+- 🧾 **RAML**
+
+---
+
+## 🚧 Estado actual
+
+🔧 **Proyecto en desarrollo**  
+Voy a ir actualizándolo a medida que aprendo más o encuentre nuevas formas de mejorarlo.
+
+---
+
+## 👩‍💻 Sobre mí
+
+Soy una persona proactiva, curiosa y autodidacta, apasionada por seguir aprendiendo. Este proyecto name como un pequeño laboratorio personal donde aplico lo que voy aprendiendo en el mundo de las integraciones. 
+No es un proyecto perfecto, pero si esta hecho con mucha dedicación, entusiasmo y ganas de mejorar cada dia. 
+Mi objetivo no es solo que funcione, sino entender el "por qué" y el "como" de cada parte del proceso.
+
+---
 
 ## 📫 Contacto
 
-📧 jm.ovalle25@gmail.com 
-🔗 [LinkedIn u otra red profesional]
+📧 jm.ovalle25@gmail.com  
+🔗 http://linkedin.com/in/julieth-ovalle-9a064a208
 
 ---
 
 ## 📝 Licencia
 
-Uso libre para fines educativos y de aprendizaje.
+Este proyecto es libre para usar como referencia, inspiración o base para tus propios experimentos.
+
