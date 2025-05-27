@@ -1,17 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns="http://www.mulesoft.org/schema/mule/core"
-	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
-http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+<mule xmlns:db="http://www.mulesoft.org/schema/mule/db" xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd
+http://www.mulesoft.org/schema/mule/db http://www.mulesoft.org/schema/mule/db/current/mule-db.xsd">
 	<sub-flow name="impl-get-pokemon-by-name" doc:id="e8ba76b2-88c9-42fb-945c-f69770c41f77" >
-		<ee:transform doc:name="Set var pokename" doc:id="5899bfc6-4ea4-4c48-b4d9-a21234edf321" >
+		<ee:transform doc:name="Set var pokeName" doc:id="5899bfc6-4ea4-4c48-b4d9-a21234edf321" >
 			<ee:variables >
 				<ee:set-variable variableName="pokeName" ><![CDATA[attributes.uriParams.'pokeName']]></ee:set-variable>
 			</ee:variables>
 		</ee:transform>
 		<flow-ref doc:name="cl-get-pokemon-by-name" doc:id="b83cf1fe-909a-4759-aed4-494478005070" name="cl-get-pokemon-by-name"/>
-		<ee:transform doc:name="Set response" doc:id="fcae0f27-e58f-4c52-9a82-5dc933f817a7" >
+		<ee:transform doc:name="Set response pokemon details" doc:id="fcae0f27-e58f-4c52-9a82-5dc933f817a7" >
 			<ee:message >
 				<ee:set-payload ><![CDATA[%dw 2.0
 output application/json
@@ -32,9 +33,31 @@ output application/json
 ]]></ee:set-payload>
 			</ee:message>
 		</ee:transform>
+		<choice doc:name="Claassification attack pokemon" doc:id="00187860-2bd8-4295-b52a-ee3a456bc5be" >
+			<when expression="#[payload.attack &gt;60]">
+				<set-variable value="High attack" doc:name="High attack" doc:id="91a7872b-996e-46c8-b4aa-d90ab972dd3b" variableName="classification"/>
+			</when>
+			<when expression="#[payload.attack &gt; 30 and payload.attack &lt; 60]">
+				<set-variable value="Medium attack" doc:name="Medium attack" doc:id="8b96539b-e62e-480a-bdbb-32de7a8d5d8f" variableName="classification"/>
+			</when>
+			<otherwise >
+				<set-variable value="Low attack" doc:name="Low attack" doc:id="fb271a16-0d34-4eec-a3e1-2d5848858cec" variableName="classification"/>
+			</otherwise>
+		</choice>
+		<flow-ref doc:name="Post pokemon classification" doc:id="d127bad7-e1d6-41b7-ae7b-22f115eeb546" name="cl-post-pokemon-classification"/>
+		<ee:transform doc:name="set response" doc:id="a856e957-fccc-4d0b-9987-6cb259375522" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+{
+	"message": "successfully created"
+}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
 	</sub-flow>
 	<sub-flow name="impl-post-pokemon" doc:id="74c91780-aad2-4a45-8b5e-ccdf85a571a5" >
-		<ee:transform doc:name="Transform Message" doc:id="38299b92-311a-4b36-b76e-4b8d8ef63dd2">
+		<ee:transform doc:name="set pokemon" doc:id="38299b92-311a-4b36-b76e-4b8d8ef63dd2">
 			<ee:message>
 				<ee:set-payload><![CDATA[%dw 2.0
 output application/json
@@ -59,5 +82,119 @@ output application/json
 } as Object {encoding: "UTF-8", mediaType: "application/json"}]]></ee:set-payload>
 			</ee:message>
 		</ee:transform>
+	</sub-flow>
+	<sub-flow name="impl-get-trainers" doc:id="70721bdd-e2ae-44f7-b976-b5139e385ff2" >
+		<flow-ref doc:name="cl-get-trainers" doc:id="e7332a3b-ad19-4e4e-9f07-1f4cc70800e0" name="cl-get-trainers"/>
+		<ee:transform doc:name="Set response" doc:id="2571d0b1-5887-455a-b3d3-9718a403e555">
+			<ee:message>
+				<ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+payload map (trainer)->
+{
+	id: trainer.id,
+	name: trainer.name,
+	city: trainer.city,
+	email: trainer.email,
+	pokefav: (trainer.pokefav splitBy ",")
+	map (p) -> trim(p)
+}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+	</sub-flow>
+	<sub-flow name="impl-get-trainers-by-id" doc:id="61ed00f0-109d-4fc9-81a8-2349d26cda1c" >
+		<ee:transform doc:name="Uri Params Id" doc:id="0b34cc0c-fac3-4873-b80f-5e11c75d65dd" >
+			<ee:variables >
+				<ee:set-variable variableName="id" ><![CDATA[attributes.uriParams.'id']]></ee:set-variable>
+			</ee:variables>
+		</ee:transform>
+		<flow-ref doc:name="cl-get-trainer-by-id" doc:id="ef82ebce-bc92-4fc4-b351-a76598460cb1" name="cl-get-trainer-by-id" />
+		<ee:transform doc:name="set response" doc:id="f23ce401-840f-46a9-8ae2-991cfbf96381" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+payload]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<foreach doc:name="For Each" doc:id="2c9ef83a-cdc8-4f43-ab27-900d991dafd9" collection='#[read((payload[0].pokefav default []), "application/json")]' rootMessageVariableName="name" >
+			<ee:transform doc:name="set pokeName" doc:id="ff86bc39-ef38-45be-8174-7ce7cb3a5df3" >
+				<ee:message >
+				</ee:message>
+				<ee:variables >
+					<ee:set-variable variableName="pokeName" ><![CDATA[%dw 2.0
+output application/json
+var pokeName = lower(payload  default "")
+
+---
+
+trim(pokeName)
+]]></ee:set-variable>
+				</ee:variables>
+			</ee:transform>
+			<flow-ref doc:name="get-pokemon-by-name" doc:id="942b20b4-3e64-4c7d-a381-39c0a3ccd075" name="cl-get-pokemon-by-name"/>
+			<ee:transform doc:name="set pokemon info" doc:id="552e3ac6-3007-49d9-a07d-10c16d6ad978" >
+				<ee:message >
+					<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+{   
+    "id": payload.id default "0",
+    "name": payload.forms[0].name default "Undefined",
+    "class": payload.types[0]."type".name default "Undefined",
+    "weight" : payload.weight default "0",
+    "size": payload.size default "Undefined",
+    "speed": payload.stats[5].base_stat default "0",
+    "defense": payload.stats[2].base_stat default "0",
+    "attack": payload.stats[1].base_stat default "0",
+    "abilities" : payload.abilities[1].ability.name default "Undefined",
+    "base experience" : payload.base_experience default "0"
+    
+}
+]]></ee:set-payload>
+				</ee:message>
+			</ee:transform>
+			<ee:transform doc:name="accum pokeName" doc:id="edf93a78-5675-4b1e-92bd-ab7dbff1ab7a" >
+				<ee:message >
+				</ee:message>
+				<ee:variables >
+					<ee:set-variable variableName="accum" ><![CDATA[%dw 2.0
+output application/json
+---
+((vars.accum default {} ++ payload))]]></ee:set-variable>
+				</ee:variables>
+			</ee:transform>
+		</foreach>
+		<ee:transform doc:name="group result pokeName" doc:id="9e9abcb4-92a2-49d3-8cf8-fe014879de0c">
+				<ee:message>
+				</ee:message>
+				<ee:variables>
+					<ee:set-variable variableName="pokeNameList"><![CDATA[%dw 2.0
+output application/json
+var pokeNameObj = vars.accum pluck ((v, k) -> {(k): v})
+var grouped = pokeNameObj groupBy ((item, index) -> floor(index / 10))
+---
+grouped pluck ((value, key) -> value reduce ((item, acc = {}) -> acc ++ item))
+
+
+
+]]></ee:set-variable>
+				</ee:variables>
+			</ee:transform>
+		<ee:transform doc:name="set response" doc:id="de24e194-45d1-4d89-b5cb-ee44fb25896e">
+				<ee:message>
+					<ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+{
+    "id": payload[0].id,
+    "name": payload[0].name,
+    "city": payload[0].city,
+    "email": payload[0].email,
+    "pokefav": vars.pokeNameList
+}
+]]></ee:set-payload>
+				</ee:message>
+			</ee:transform>
 	</sub-flow>
 </mule>

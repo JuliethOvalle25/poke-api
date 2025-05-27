@@ -8,21 +8,12 @@ http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/
 http://www.mulesoft.org/schema/mule/workday http://www.mulesoft.org/schema/mule/workday/current/mule-workday.xsd
 http://www.mulesoft.org/schema/mule/db http://www.mulesoft.org/schema/mule/db/current/mule-db.xsd">
 	<sub-flow name="cl-get-pokemon-by-name" doc:id="b8a4dcdb-de1e-4a18-bd92-6e344bf2c573" >
-		<http:request method="GET" doc:name="Request Pokemon by name" doc:id="5377b74f-f511-45d2-9525-589e9013f98a" config-ref="HTTP_Request_getPokemonn" path="/v2/pokemon/{pokeName}" >
-			<http:uri-params ><![CDATA[#[output application/java
+		<http:request method="GET" doc:name="Request Pokemon by name" doc:id="5377b74f-f511-45d2-9525-589e9013f98a" config-ref="HTTP_Request_getPokemonn" path="/v2/pokemon/{pokeName}">
+			<http:uri-params><![CDATA[#[output application/java
 ---
 {
-	'pokeName' : vars.pokeName
+	'pokeName' : trim(vars.pokeName)
 }]]]></http:uri-params>
 		</http:request>
-	</sub-flow>
-	<sub-flow name="cl-post-pokemon" doc:id="6367d47f-3534-46f9-aff3-5f222085df07" >
-		<db:insert doc:name="Insert-post-trainers" doc:id="a6552f63-680b-4a11-a50c-8e83b5bd6ebe" config-ref="Database_Config_pokemon">
-			<db:sql ><![CDATA[INSERT INTO trainers (name, city, email, pokefav)
-VALUES (:name, :city, :email, :pokefav)
- 
-]]></db:sql>
-			<db:input-parameters ><![CDATA[#[payload]]]></db:input-parameters>
-		</db:insert>
 	</sub-flow>
 </mule>

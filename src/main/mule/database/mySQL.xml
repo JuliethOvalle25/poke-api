@@ -5,6 +5,40 @@
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
 http://www.mulesoft.org/schema/mule/db http://www.mulesoft.org/schema/mule/db/current/mule-db.xsd">
 	<db:config name="Database_Config_pokemon" doc:name="Database Config" doc:id="e0064773-8bed-4f79-8299-1c6f9b7b99bd" >
-		<db:my-sql-connection host="localhost" port="3306" user="root" password="1234" database="trainers_db" />
+		<db:my-sql-connection host="localhost" port="3306" user="root" password="12345678" database="trainers_db" />
 	</db:config>
+	<sub-flow name="cl-post-pokemon" doc:id="86839f2a-1138-493d-81d9-3cd5985d4273" >
+		<db:insert doc:name="post-trainers" doc:id="75447f4a-7c63-424e-8ab7-26c70a7ef5e3" config-ref="Database_Config_pokemon" >
+			<db:sql ><![CDATA[INSERT INTO trainers (name, city, email, pokefav)
+VALUES (:name, :city, :email, :pokefav)
+ 
+]]></db:sql>
+			<db:input-parameters ><![CDATA[#[payload]]]></db:input-parameters>
+		</db:insert>
+	</sub-flow>
+	<sub-flow name="cl-get-trainers" doc:id="67b01362-5502-4e51-9417-5b2bd8dfb042" >
+		<db:select doc:name="get-trainers" doc:id="b3ca8240-4231-4384-8b71-1510fed0ccd5" config-ref="Database_Config_pokemon" >
+			<db:sql ><![CDATA[SELECT * FROM trainers ]]></db:sql>
+		</db:select>
+	</sub-flow>
+	<sub-flow name="cl-post-pokemon-classification" doc:id="fd9eed8f-b06d-4c5d-a236-82a9e0f57c25" >
+		<db:insert doc:name="post pokemon classification" doc:id="1fc8c1aa-0296-42a8-8276-41bf77df2906" config-ref="Database_Config_pokemon" >
+			<db:sql ><![CDATA[INSERT INTO clasificacion_pokemon (name, attack, defense, speed, classification)
+VALUES (:name, :attack, :defense, :speed, :classification)]]></db:sql>
+			<db:input-parameters ><![CDATA[#[{
+	name: payload.name,
+	attack: payload.attack,
+	defense: payload.defense,
+	speed: payload.speed,
+	classification: vars.classification
+}]]]></db:input-parameters>
+		</db:insert>
+	</sub-flow>
+	<sub-flow name="cl-get-trainer-by-id" doc:id="230d75a0-23d7-4dfc-b578-13bcb23bd0c0" >
+		<db:select doc:name="get-trainers-by-id" doc:id="98f10640-3940-45c4-81db-1f6660b46cbb" config-ref="Database_Config_pokemon" >
+			<db:sql ><![CDATA[SELECT * FROM trainers 
+WHERE id = :id]]></db:sql>
+			<db:input-parameters ><![CDATA[#[{'id': vars.id}]]]></db:input-parameters>
+		</db:select>
+	</sub-flow>
 </mule>
