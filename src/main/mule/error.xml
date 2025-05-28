@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:sftp="http://www.mulesoft.org/schema/mule/sftp" xmlns:sockets="http://www.mulesoft.org/schema/mule/sockets"
+	xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
+	xmlns:db="http://www.mulesoft.org/schema/mule/db" xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/db http://www.mulesoft.org/schema/mule/db/current/mule-db.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd
+http://www.mulesoft.org/schema/mule/sockets http://www.mulesoft.org/schema/mule/sockets/current/mule-sockets.xsd
+http://www.mulesoft.org/schema/mule/sftp http://www.mulesoft.org/schema/mule/sftp/current/mule-sftp.xsd">
+	<error-handler name="errorError_Handler" doc:id="82d4bb54-8421-49a1-a8bc-41b60b3beadb" >
+		<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="6b30d547-bbd8-4f79-9b50-8dccb7b3565c" type="HTTP:NOT_FOUND">
+			<ee:transform doc:name="Transform Message" doc:id="9a4089b4-0b35-4e27-9e51-b20ae8ff259a" >
+				<ee:message >
+					<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+{
+	errorCode: 404,
+	errorDescription: "Not Found"
+}]]></ee:set-payload>
+				</ee:message>
+			</ee:transform>
+			<set-variable value="404" doc:name="Set Variable" doc:id="f41f4323-ade1-4bbd-b991-103f3eafb4cf" variableName="httpStatus"/>
+		</on-error-propagate>
+		<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="16967bc8-6825-49b1-b10f-a787b1dee1e9" type="DB:CONNECTIVITY">
+			<ee:transform doc:name="Transform Message" doc:id="fbc42ab0-c78e-4167-956a-cee455bf0a8a" >
+				<ee:message >
+					<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+{
+	errorCode: 504,
+	errorDescription: "DB Connectivity"
+}]]></ee:set-payload>
+				</ee:message>
+			</ee:transform>
+		</on-error-propagate>
+		<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="5da42732-1376-4a57-ae84-079cc8c51e1a" type="APP:POKE_FAIL">
+			<ee:transform doc:name="Transform Message" doc:id="a86f02a5-cc18-4532-ae51-89b767a6c5a6" >
+				<ee:message >
+					<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+{
+	errorCode: 509,
+	errorDescription: "ERROR FORZADO"
+}]]></ee:set-payload>
+				</ee:message>
+			</ee:transform>
+			<set-variable value="509" doc:name="Set Variable" doc:id="5c944ffb-788e-4bfe-89e7-355798e4780a" variableName="httpStatus" />
+		</on-error-propagate>
+		<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="d76f0ecc-e2d3-468c-b320-2b2ebd63b0bd" type="ANY">
+			<ee:transform doc:name="Transform Message" doc:id="8a67f558-7300-47f8-9b53-3cf9dc913997">
+				<ee:message>
+					<ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+{
+	errorCode: 500,
+	errorDescription: "Internal Server Error"
+}]]></ee:set-payload>
+				</ee:message>
+			</ee:transform>
+		</on-error-propagate>
+	</error-handler>
+</mule>
